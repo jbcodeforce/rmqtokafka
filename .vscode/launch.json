@@ -1,0 +1,62 @@
+{
+    // Use IntelliSense to learn about possible attributes.
+    // Hover to view descriptions of existing attributes.
+    // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "type": "java",
+            "name": "Debug (Launch) - Current File",
+            "request": "launch",
+            "mainClass": "${file}",
+            "args" : "-properties config/kafka.properties"
+        },
+        {
+            "type": "java",
+            "name": "Debug (Launch)-KafkaConsumer<rmqtokafka>",
+            "request": "launch",
+            "mainClass": "ibm.gse.eda.poc.kafka.KafkaConsumer",
+            "args" : "-properties config/kafka.properties",
+            "projectName": "rmqtokafka"
+        },
+        {
+            "type": "java",
+            "name": "Debug (Launch)-AmqpReceiver<rmqtokafka>",
+            "request": "launch",
+            "mainClass": "ibm.gse.eda.poc.rmq.AmqpReceiver",
+            "projectName": "rmqtokafka"
+        },
+        {
+            "type": "java",
+            "name": "Debug (Launch)-AmqpSender<rmqtokafka>",
+            "request": "launch",
+            "mainClass": "ibm.gse.eda.poc.rmq.AmqpSender",
+            "projectName": "rmqtokafka"
+        },
+        {
+            "type": "java",
+            "name": "Debug (Launch)-PerformanceProducer<rmqtokafka>",
+            "request": "launch",
+            "mainClass": "ibm.gse.eda.poc.rmq.PerformanceProducer",
+            "projectName": "rmqtokafka"
+        },
+        {
+            "type": "java",
+            "name": "Debug (Launch)-Producer",
+            "request": "launch",
+            "mainClass": "com.ibm.es.producer.Producer"
+        },
+        {
+            "type": "java",
+            "name": "Debug (Launch)-AmqpSenderApp",
+            "request": "launch",
+            "mainClass": "ibm.gse.eda.AmqpSenderApp"
+        },
+        {
+            "type": "java",
+            "name": "Debug (Launch)-ProducerPerformance",
+            "request": "launch",
+            "mainClass": "org.apache.kafka.tools.ProducerPerformance"
+        }
+    ]
+}

@@ -1,4 +1,4 @@
-package ibm.gse.eda;
+package ibm.gse.eda.poc.rmq;
 
 import java.io.IOException;
 import java.util.concurrent.TimeoutException;
@@ -23,8 +23,8 @@ public class AmqpSender {
     private ConnectionFactory factory;
 
     public AmqpSender() {
-        hostname = (String) System.getenv().getOrDefault("MQHOST", "localhost");
-        queueName = (String) System.getenv().getOrDefault("QUEUE_NAME", "testqueue");
+        hostname = (String) System.getenv().getOrDefault(CommonConfig.RMQ_HOST, "localhost");
+        queueName = (String) System.getenv().getOrDefault(CommonConfig.RMQ_QUEUE_NAME, "accounts");
         factory = new ConnectionFactory();
         factory.setHost(hostname);
     }
@@ -48,12 +48,19 @@ public class AmqpSender {
     }
 
     public static void main(String[] args) throws Exception {
+        int nbRecords = 40;
+        if (args.length != 0) {
+            nbRecords= Integer.parseInt(args[0]);
+        }
         AmqpSender sender = new AmqpSender();
         Gson parser = new Gson();
-        Customer c = new Customer("U01", "Bob", "The Builder", "12-04-2000");
-        String messageToSend = parser.toJson(c);
-        sender.connectToQueue();
-        sender.publish(messageToSend);
+        for (int i = 0; i < nbRecords ;i++){
+            Customer c = new Customer("U0"+i, "Bob", "The Builder", "12-04-2000");
+            String messageToSend = parser.toJson(c);
+            sender.connectToQueue();
+            sender.publish(messageToSend);
+        }
+       
     }
 
     public void publish(String messageToSend) throws IOException {

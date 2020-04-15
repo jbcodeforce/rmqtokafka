@@ -1,2 +1,4 @@
 target/
 .settings/
+kafka-connect-rabbitmq-source/
+kconnect/connectors/*.jar

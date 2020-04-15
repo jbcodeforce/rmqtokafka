@@ -16,9 +16,21 @@
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <maven.compiler.source>1.8</maven.compiler.source>
     <maven.compiler.target>1.8</maven.compiler.target>
+    <kafka.version>2.4.0</kafka.version>
+    <fully.qualified.main.class>ibm.gse.eda.poc.kafka.KafkaConsumer</fully.qualified.main.class>
   </properties>
 
   <dependencies>
+    <dependency>
+    	<groupId>org.apache.kafka</groupId>
+    	<artifactId>kafka-clients</artifactId>
+    	<version>${kafka.version}</version>
+		</dependency>
+    <dependency>
+      <groupId>org.apache.kafka</groupId>
+      <artifactId>kafka-streams</artifactId>
+      <version>${kafka.version}</version>
+    </dependency>
     <!-- https://mvnrepository.com/artifact/com.rabbitmq/amqp-client -->
     <dependency>
         <groupId>com.rabbitmq</groupId>
@@ -72,14 +84,80 @@
         <plugin>
           <artifactId>maven-surefire-plugin</artifactId>
           <version>2.22.1</version>
+        <executions>
+          <execution>
+            <phase>test</phase>
+            <id>default-test</id>
+            <configuration>
+              <excludes>
+                <exclude>**/it/**</exclude>
+              </excludes>
+              <reportsDirectory>${project.build.directory}/test-reports/unit</reportsDirectory>
+            </configuration>
+          </execution>
+        </executions>
         </plugin>
         <plugin>
-          <artifactId>maven-jar-plugin</artifactId>
-          <version>3.0.2</version>
+          <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-failsafe-plugin</artifactId>
+          <version>2.22.1</version>
+          <executions>
+          <execution>
+            <phase>integration-test</phase>
+            <id>integration-test</id>
+            <goals>
+              <goal>integration-test</goal>
+            </goals>
+            <configuration>
+              <includes>
+                <include>**/it/**</include>
+              </includes>
+              <systemPropertyVariables>
+                <liberty.test.port>${testServerHttpPort}</liberty.test.port>
+                <war.context>${warContext}</war.context>
+              </systemPropertyVariables>
+              <environmentVariables>
+                <KAFKA_BROKERS>${KAFKA_BROKERS}</KAFKA_BROKERS>
+                <KAFKA_APIKEY>${KAFKA_APIKEY}</KAFKA_APIKEY>
+                <TRUSTSTORE_ENABLED>${TRUSTSTORE_ENABLED}</TRUSTSTORE_ENABLED>
+                <TRUSTSTORE_PATH>${TRUSTSTORE_PATH}</TRUSTSTORE_PATH>
+                <TRUSTSTORE_PWD>${TRUSTSTORE_PWD}</TRUSTSTORE_PWD>
+              </environmentVariables>
+            </configuration>
+          </execution>
+        </executions>
+        <configuration>
+          <summaryFile>${project.build.directory}/test-reports/it/failsafe-summary.xml</summaryFile>
+          <reportsDirectory>${project.build.directory}/test-reports/it</reportsDirectory>
+        </configuration>
         </plugin>
+        
         <plugin>
           <artifactId>maven-install-plugin</artifactId>
           <version>2.5.2</version>
+        </plugin>
+        <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-assembly-plugin</artifactId>
+           <version>2.5.2</version>
+          <executions>
+            <execution>
+              <phase>package</phase>
+              <goals>
+                <goal>single</goal>
+              </goals>
+              <configuration>
+                <archive>
+                  <manifest>
+                    <mainClass>${fully.qualified.main.class}</mainClass>
+                  </manifest>
+                </archive>
+                <descriptorRefs>
+                  <descriptorRef>jar-with-dependencies</descriptorRef>
+                </descriptorRefs>
+              </configuration>
+            </execution>
+          </executions>
         </plugin>
         <plugin>
           <artifactId>maven-deploy-plugin</artifactId>

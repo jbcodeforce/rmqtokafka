@@ -70,5 +70,38 @@ Start it using maven: `mvn exec:java -Dexec.mainClass=ibm.gse.eda.AmqpReceiver`
 * Do we have multiple consumers sharing a queue? This could generate concurrency race condition and requeued message could be in different position, instead of its original position.
 * Finding a suitable prefetch value is a matter of trial and error and will vary from workload to workload. Values in the 100 through 300 range usually offer optimal throughput and do not run significant risk of overwhelming consumers
 
+## RabbitMQ to Kafka using IBM Event Streams connector
 
+The very quick instructions are:
 
+1. Clone the connector repository: [https://github.com/ibm-messaging/kafka-connect-rabbitmq-source](https://github.com/ibm-messaging/kafka-connect-rabbitmq-source)
+1. Build the jar file of this connector with the dependencies, under the kafka-connect-rabbitmq-source folder: `mvn clean package`
+1. Copy the generated "with-dependencies" jar file under `kconnect/connectors` folder.
+1. Define / review the configuration properties for the connector: `config/connect-distributed.properties`. For example verify the connect topic names and bootstrap server to Kafka.
+1. Package the kafka connector with your configuration: `docker build -t ibmcase/rmqk .` The dockerfile is in the kconnect folder and use the /opt/connectors and config folder content.
+1. Create the expected topics on the Target cluster:
+
+    ```shell
+    ./kafka-topics.sh --bootstrap-server localhost:9092 --create --topic connect-offsets
+    ./kafka-topics.sh --bootstrap-server localhost:9092 --create --topic connect-status 
+    ./kafka-topics.sh --bootstrap-server localhost:9092 --create --topic connect-configs
+    ```
+1. Start the local kafka connect cluster. The following command is used when connecting to a local kafka brokers attached to the docker network: `kafkanet`: `docker run --network kafkanet -p8083:8083 ibmcase/rmqk`
+1. As the Connector runs in distributed mode, we can add RabbitMQ configuration by posting to the url of the Connector: `localhost:8083`. An example of json is part of the connector source and reproduced here for the example we used:
+
+    ```json
+      "name": "RabbitMQSourceConnector",
+    "config": {
+        "connector.class": "com.ibm.eventstreams.connect.rabbitmqsource.RabbitMQSourceConnector",
+        "tasks.max": "2",
+        "kafka.topic" : "accounts",
+        "rabbitmq.queue" : "accounts",
+        "rabbitmq.host" : "rabbitmq",
+        "rabbitmq.prefetch.count" : "500",
+        "rabbitmq.automatic.recovery.enabled" : "true",
+        "rabbitmq.network.recovery.interval.ms" : "10000",
+        "rabbitmq.topology.recovery.enabled" : "true"
+    }
+    ```
+1. Run a Rabbit MQ message producer. In this project use the AmqpSender class.
+1. Run a Kafka consumer 
