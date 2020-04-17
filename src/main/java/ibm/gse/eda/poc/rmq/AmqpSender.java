@@ -48,7 +48,7 @@ public class AmqpSender {
     }
 
     public static void main(String[] args) throws Exception {
-        int nbRecords = 40;
+        int nbRecords = 10;
         if (args.length != 0) {
             nbRecords= Integer.parseInt(args[0]);
         }

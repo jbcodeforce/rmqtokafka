@@ -103,5 +103,6 @@ The very quick instructions are:
         "rabbitmq.topology.recovery.enabled" : "true"
     }
     ```
+
 1. Run a Rabbit MQ message producer. In this project use the AmqpSender class.
-1. Run a Kafka consumer 
+1. Run a Kafka consumer

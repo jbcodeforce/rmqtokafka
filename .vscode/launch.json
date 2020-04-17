@@ -6,18 +6,18 @@
     "configurations": [
         {
             "type": "java",
-            "name": "Debug (Launch) - Current File",
+            "name": "CodeLens (Launch) - KafkaStreamConsumerTool",
             "request": "launch",
-            "mainClass": "${file}",
-            "args" : "-properties config/kafka.properties"
+            "mainClass": "ibm.gse.eda.poc.kafka.KafkaStreamConsumerTool",
+            "projectName": "rmqtokafka",
+            "args": "-properties config/kafka.properties"
         },
         {
             "type": "java",
-            "name": "Debug (Launch)-KafkaConsumer<rmqtokafka>",
+            "name": "Debug (Launch) - Current File",
             "request": "launch",
-            "mainClass": "ibm.gse.eda.poc.kafka.KafkaConsumer",
-            "args" : "-properties config/kafka.properties",
-            "projectName": "rmqtokafka"
+            "mainClass": "${file}",
+            "args": "-properties config/kafka.properties"
         },
         {
             "type": "java",
