@@ -72,22 +72,32 @@ Start it using maven: `mvn exec:java -Dexec.mainClass=ibm.gse.eda.AmqpReceiver`
 
 ## RabbitMQ to Kafka using IBM Event Streams connector
 
-The very quick instructions are:
+This section highlights the instructions to deploy a custom RabbitMQ to event streams kafka connector. The following first 3 steps are already done and the rabbitmq connector jar file is already under the `kconnect/connectors` folder.
 
-1. Clone the connector repository: [https://github.com/ibm-messaging/kafka-connect-rabbitmq-source](https://github.com/ibm-messaging/kafka-connect-rabbitmq-source)
-1. Build the jar file of this connector with the dependencies, under the kafka-connect-rabbitmq-source folder: `mvn clean package`
-1. Copy the generated "with-dependencies" jar file under `kconnect/connectors` folder.
-1. Define / review the configuration properties for the connector: `config/connect-distributed.properties`. For example verify the connect topic names and bootstrap server to Kafka.
+1. Clone the IBM Rabbitmq connector repository: [https://github.com/ibm-messaging/kafka-connect-rabbitmq-source](https://github.com/ibm-messaging/kafka-connect-rabbitmq-source)
+1. Build the jar file of this connector with the dependencies, under the kafka-connect-rabbitmq-source folder using: `mvn clean package`
+1. Copy the generated "with-dependencies" jar file under `kconnect/connectors` folder of this repository. 
+1. Define / review the configuration properties for the connector: `config/connect-distributed.properties`. For example verify the connect topic names and kafka bootstrap server URL.
+1. Download the CA certificate (truststore packaging) to access Event Streams deployed on CP4I under the `certs` folder. The file is named `es-cert.jks`.
 1. Package the kafka connector with your configuration: `docker build -t ibmcase/rmqk .` The dockerfile is in the kconnect folder and use the /opt/connectors and config folder content.
-1. Create the expected topics on the Target cluster:
+1. Create the expected topics on the Target Kafka cluster:
 
     ```shell
     ./kafka-topics.sh --bootstrap-server localhost:9092 --create --topic connect-offsets
     ./kafka-topics.sh --bootstrap-server localhost:9092 --create --topic connect-status 
     ./kafka-topics.sh --bootstrap-server localhost:9092 --create --topic connect-configs
     ```
-1. Start the local kafka connect cluster. The following command is used when connecting to a local kafka brokers attached to the docker network: `kafkanet`: `docker run --network kafkanet -p8083:8083 ibmcase/rmqk`
-1. As the Connector runs in distributed mode, we can add RabbitMQ configuration by posting to the url of the Connector: `localhost:8083`. An example of json is part of the connector source and reproduced here for the example we used:
+1. Push the created image to a docker registry, private or docker hub: `docker push ibmcase/rmqk`
+1. Connect via `oc login...` command to the OpenShift cluster
+1. Define the deployment and the service for the connector in OCP. The configuration files are under the `k8s` folder. You may want to change the name, namespace...
+
+    ```shell
+    oc apply -f deployment-rmq-kconnect.yaml
+    oc apply -f service-rmq-kconnect.yaml
+    ```
+1. Verify the connector pod is up and running: `oc get pods`
+1. Expose the service with a route: `oc expose service rmq-kconnect`. Then get the URL of the connector: `oc describe route rmq-kconnect-route`
+1. Tune the json descriptor for the connector definition: As the Connector runs in distributed mode, we can add RabbitMQ configuration by posting to the url of the Connector: `rmq-kconnect-route-rmq.tchcluster-cp4i-0143c5dd31acd8e030a1d6e0ab1380e3-0000.us-south.containers.appdomain.cloud/connectors`. An example of json is part of the connector source and reproduced here for the example we used:
 
     ```json
       "name": "RabbitMQSourceConnector",
@@ -104,5 +114,8 @@ The very quick instructions are:
     }
     ```
 
-1. Run a Rabbit MQ message producer. In this project use the AmqpSender class.
-1. Run a Kafka consumer
+1. Run a Rabbit MQ message producer to write message to the `accounts` queue. In this project we use the AmqpSender class. As an alternate you can use the RabbitMq console.
+1. Run a Kafka consumer on the target topic.
+
+
+If you run the local Kafka cluster and RabbitMQ docker containers via docker compose, your can run the connector with the following command: `docker run --network kafkanet -p8083:8083 ibmcase/rmqk`

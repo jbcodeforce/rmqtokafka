@@ -13,6 +13,7 @@ RUN mkdir /opt/kafka/logs && chown esuser:esgroup /opt/kafka/logs
 
 RUN mkdir /opt/connectors && chown esuser:esgroup /opt/connectors
 COPY config/ /opt/kafka/config
+COPY certs/es-cert.jks /opt/kafka/es-cert.jks 
 COPY --chown=esuser:esgroup connectors /opt/connectors/
 COPY --chown=esuser:esgroup connectors /opt/connectors/
 # COPY --chown=esuser:esgroup es-cert.jks /opt/kafka/
@@ -23,4 +24,4 @@ EXPOSE 8083
 
 USER esuser
 
-ENTRYPOINT ["./bin/connect-distributed.sh", "config/kconnect-local-kafka.properties"]
+ENTRYPOINT ["./bin/connect-distributed.sh", "config/connect-distributed.properties"]

@@ -1,3 +1,4 @@
 target/
 .settings/
+certs/es-cert.jks
 kafka-connect-rabbitmq-source/

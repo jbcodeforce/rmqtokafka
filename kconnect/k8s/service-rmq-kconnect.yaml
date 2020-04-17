@@ -1,0 +1,19 @@
+﻿kind: Service
+apiVersion: v1
+metadata:
+  name: rmq-kconnect
+  namespace: rmq
+  selfLink: /api/v1/namespaces/rmq/services/rmq-kconnect
+spec:
+  ports:
+    - name: tcp
+      protocol: TCP
+      port: 80
+      targetPort: 8083
+  selector:
+    app: rmq-kconnect
+  clusterIP: None
+  type: ClusterIP
+  sessionAffinity: None
+status:
+  loadBalancer: {}
