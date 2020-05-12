@@ -2,7 +2,7 @@
 apiVersion: v1
 metadata:
   name: rmq-kconnect
-  namespace: rmq
+  namespace: rabbitmq
   selfLink: /api/v1/namespaces/rmq/services/rmq-kconnect
 spec:
   ports:

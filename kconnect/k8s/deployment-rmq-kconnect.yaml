@@ -2,10 +2,7 @@
 apiVersion: apps/v1
 metadata:
   name: rmq-kconnect
-  namespace: rmq
-  selfLink: /apis/apps/v1/namespaces/rmq/deployments/rmq-kconnect
-  annotations:
-    deployment.kubernetes.io/revision: '2'
+  namespace: rabbitmq
 spec:
   replicas: 1
   selector:
@@ -13,13 +10,12 @@ spec:
       app: rmq-kconnect
   template:
     metadata:
-      creationTimestamp: null
       labels:
         app: rmq-kconnect
     spec:
       containers:
         - name: rmq-kconnect
-          image: ibmcase/rmqconnect
+          image: image-registry.openshift-image-registry.svc:5000/rabbitmq/kconnect
           ports:
             - containerPort: 8083
               protocol: TCP
