@@ -7,6 +7,7 @@ RUN addgroup --gid 5000 --system esgroup && \
 
 COPY --chown=esuser:esgroup --from=builder /opt/kafka/bin/ /opt/kafka/bin/
 COPY --chown=esuser:esgroup --from=builder /opt/kafka/libs/ /opt/kafka/libs/
+COPY --chown=esuser:esgroup connectors/db2jcc4.jar /opt/kafka/libs/
 COPY --chown=esuser:esgroup --from=builder /opt/kafka/config/connect-distributed.properties /opt/kafka/config/
 COPY --chown=esuser:esgroup --from=builder /opt/kafka/config/connect-log4j.properties /opt/kafka/config/
 RUN mkdir /opt/kafka/logs && chown esuser:esgroup /opt/kafka/logs
@@ -17,6 +18,7 @@ COPY --chown=esuser:esgroup certs/es-cert.jks /opt/kafka/es-cert.jks
 #COPY --chown=esuser:esgroup certs/registry-es-cert.jks /opt/kafka/registry-es-cert.jks 
 COPY --chown=esuser:esgroup connectors /opt/connectors/
 # COPY --chown=esuser:esgroup es-cert.jks /opt/kafka/
+#set classpath com.ibm.db2.jcc.DB2Driver
 
 WORKDIR /opt/kafka
 
