@@ -4,7 +4,7 @@ rm -rf connectors
 mkdir connectors
 cd connectors
 #pull rabbitmq-connector and avro converter jar from artifactory
-#curl https://artifactory-tools.tch-cluster-0143c5dd31acd8e030a1d6e0ab1380e3-0000.us-south.containers.appdomain.cloud/artifactory/libs-snapshot-local/com/ibm/eventstreams/connect/kafka-connect-mq-sink/1.3.0-SNAPSHOT/kafka-connect-mq-sink-1.3.0-20200519.001159-1-jar-with-dependencies.jar -O
+curl https://artifactory-tools.tch-cluster-0143c5dd31acd8e030a1d6e0ab1380e3-0000.us-south.containers.appdomain.cloud/artifactory/libs-snapshot-local/com/ibm/eventstreams/connect/kafka-connect-mq-sink/1.3.0-SNAPSHOT/kafka-connect-mq-sink-1.3.0-20200519.001159-1-jar-with-dependencies.jar -O
 #pull avro converter
 curl https://artifactory-tools.tch-cluster-0143c5dd31acd8e030a1d6e0ab1380e3-0000.us-south.containers.appdomain.cloud/artifactory/libs-snapshot-local/com/ibm/eventstreams/connect/kafka-connect-avro-converter/1.0-SNAPSHOT/kafka-connect-avro-converter-1.0-20200513.182234-1-jar-with-dependencies.jar -O
 cd ..
