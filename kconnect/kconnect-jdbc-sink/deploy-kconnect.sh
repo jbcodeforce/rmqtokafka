@@ -12,9 +12,9 @@ curl https://artifactory-tools.tch-cluster-0143c5dd31acd8e030a1d6e0ab1380e3-0000
 cd ..
 
 Docker build -t jdbc-sink-connector$1 .
-Docker tag  jdbc-sink-connector$1 default-route-openshift-image-registry.tch-cluster-0143c5dd31acd8e030a1d6e0ab1380e3-0000.us-south.containers.appdomain.cloud/rabbitmq/jdbc-sink-connector$1
+Docker tag  jdbc-sink-connector$1 $(oc get route -n openshift-image-registry -o=jsonpath='{.items[0].spec.host}')/rabbitmq/jdbc-sink-connector$1
 
-Docker push default-route-openshift-image-registry.tch-cluster-0143c5dd31acd8e030a1d6e0ab1380e3-0000.us-south.containers.appdomain.cloud/rabbitmq/jdbc-sink-connector$1
+Docker push $(oc get route -n openshift-image-registry -o=jsonpath='{.items[0].spec.host}')/rabbitmq/jdbc-sink-connector$1
 
 # create a temporary directory for deployment
 mkdir config
