@@ -1,8 +1,8 @@
 
 #clean up
 rm -rf k8s
-rm -rf connectors
-mkdir connectors
+#rm -rf connectors
+#mkdir connectors
 cd connectors
 
 #pull jdbc jar from artifactory
