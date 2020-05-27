@@ -15,4 +15,4 @@ status.storage.replication.factor=5
 
 Additionally, a secret must be created to supply the cert for the pod:
 
-kubectl create secret generic kafka-cert --from-file=config/es-cert.jks
+kubectl create secret generic kafka-cert --from-file=certs/es-cert.jks
