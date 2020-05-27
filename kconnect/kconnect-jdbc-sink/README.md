@@ -3,6 +3,7 @@ to run the deploy-kconnect.sh, pass the number of the connector you want to depl
 For example, ./deploy-kconnect.sh 1, will deploy jdbc-sink-connector1
 
 Make sure you've created the topics in the connect-distributed.properties file:
+
 offset.storage.topic=connect-offsets-jdbc-1
 offset.storage.replication.factor=25
 
