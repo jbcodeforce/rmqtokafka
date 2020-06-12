@@ -4,11 +4,11 @@
 
 * Get Rabbitmq java client library
 
-## Summary of MQRabbit concepts
+## Summary of RabbitMQ concepts
 
 * Connection abstracts the socket connection, and takes care of protocol version negotiation and authentication
 * Channel support the operation on the queue, like publish
-* Acknowledgements are from consumers to RabbitMQ: When RabbitMQ delivers a message to a consumer, it needs to know when to consider the message to be successfully sent. 
+* Acknowledgements are from consumers to RabbitMQ: When RabbitMQ delivers a message to a consumer, it needs to know when to consider the message to be successfully sent.
 * Publisher confirms are from broker ack to publisher.
 * Broker sends message with a delivery tag, scoped per channel. Delivery tags, is a monotonically growing positive number sent by producer the consumer uses for acknowledgement.
 * Acknowledged message as delivered, can be discarded from the queue.
@@ -76,10 +76,10 @@ This section highlights the instructions to deploy a custom RabbitMQ to event st
 
 1. Clone the IBM Rabbitmq connector repository: [https://github.com/ibm-messaging/kafka-connect-rabbitmq-source](https://github.com/ibm-messaging/kafka-connect-rabbitmq-source)
 1. Build the jar file of this connector with the dependencies, under the kafka-connect-rabbitmq-source folder using: `mvn clean package`
-1. Copy the generated "with-dependencies" jar file under `kconnect/connectors` folder of this repository. 
+1. Copy the generated "with-dependencies" jar file under the `kconnect/connectors` folder of this repository.
 1. Define / review the configuration properties for the connector: `config/connect-distributed.properties`. For example verify the connect topic names and kafka bootstrap server URL.
 1. Download the CA certificate (truststore packaging) to access Event Streams deployed on CP4I under the `certs` folder. The file is named `es-cert.jks`.
-1. Package the kafka connector with your configuration: `docker build -t ibmcase/rmqk .` The dockerfile is in the kconnect folder and use the /opt/connectors and config folder content.
+1. Package the kafka connector with your configuration: `docker build -t ibmcase/rmqk .` The dockerfile is in the `kconnect` folder and use the `/opt/connectors` and `config` folder content.
 1. Create the expected topics on the Target Kafka cluster:
 
     ```shell
